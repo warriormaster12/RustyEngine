@@ -3,7 +3,7 @@
 #include "component.h"
 #include <vector>
 
-#include "glm/glm.hpp"
+#include "glm.hpp"
 
 #include "VkInit.h"
 

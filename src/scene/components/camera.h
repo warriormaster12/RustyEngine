@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "component.h"
-#include "glm/glm.hpp"
+#include "glm.hpp"
 #include "VkInit.h"
 
 

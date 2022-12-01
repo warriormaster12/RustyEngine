@@ -520,15 +520,6 @@ struct DispatchTable {
 #if (defined(VK_NV_mesh_shader))
 		fp_vkCmdDrawMeshTasksIndirectCountNV = reinterpret_cast<PFN_vkCmdDrawMeshTasksIndirectCountNV>(procAddr(device, "vkCmdDrawMeshTasksIndirectCountNV"));
 #endif
-#if (defined(VK_EXT_mesh_shader))
-		fp_vkCmdDrawMeshTasksEXT = reinterpret_cast<PFN_vkCmdDrawMeshTasksEXT>(procAddr(device, "vkCmdDrawMeshTasksEXT"));
-#endif
-#if (defined(VK_EXT_mesh_shader))
-		fp_vkCmdDrawMeshTasksIndirectEXT = reinterpret_cast<PFN_vkCmdDrawMeshTasksIndirectEXT>(procAddr(device, "vkCmdDrawMeshTasksIndirectEXT"));
-#endif
-#if (defined(VK_EXT_mesh_shader))
-		fp_vkCmdDrawMeshTasksIndirectCountEXT = reinterpret_cast<PFN_vkCmdDrawMeshTasksIndirectCountEXT>(procAddr(device, "vkCmdDrawMeshTasksIndirectCountEXT"));
-#endif
 #if (defined(VK_NV_ray_tracing))
 		fp_vkCompileDeferredNV = reinterpret_cast<PFN_vkCompileDeferredNV>(procAddr(device, "vkCompileDeferredNV"));
 #endif
@@ -918,12 +909,6 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_metal_objects))
 		fp_vkExportMetalObjectsEXT = reinterpret_cast<PFN_vkExportMetalObjectsEXT>(procAddr(device, "vkExportMetalObjectsEXT"));
-#endif
-#if (defined(VK_QCOM_tile_properties))
-		fp_vkGetFramebufferTilePropertiesQCOM = reinterpret_cast<PFN_vkGetFramebufferTilePropertiesQCOM>(procAddr(device, "vkGetFramebufferTilePropertiesQCOM"));
-#endif
-#if (defined(VK_QCOM_tile_properties))
-		fp_vkGetDynamicRenderingTilePropertiesQCOM = reinterpret_cast<PFN_vkGetDynamicRenderingTilePropertiesQCOM>(procAddr(device, "vkGetDynamicRenderingTilePropertiesQCOM"));
 #endif
 #if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
@@ -2004,12 +1989,12 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getAndroidHardwareBufferPropertiesANDROID(const struct AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
+	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
 		return fp_vkGetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, struct AHardwareBuffer** pBuffer) const noexcept {
+	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) const noexcept {
 		return fp_vkGetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 	}
 #endif
@@ -2096,21 +2081,6 @@ struct DispatchTable {
 #if (defined(VK_NV_mesh_shader))
 	void cmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-	}
-#endif
-#if (defined(VK_EXT_mesh_shader))
-	void cmdDrawMeshTasksEXT(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
-		fp_vkCmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
-	}
-#endif
-#if (defined(VK_EXT_mesh_shader))
-	void cmdDrawMeshTasksIndirectEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const noexcept {
-		fp_vkCmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
-	}
-#endif
-#if (defined(VK_EXT_mesh_shader))
-	void cmdDrawMeshTasksIndirectCountEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
-		fp_vkCmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
@@ -2649,13 +2619,13 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pMemoryRequirementsCount, VkVideoSessionMemoryRequirementsKHR* pMemoryRequirements) const noexcept {
-		return fp_vkGetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
+	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pVideoSessionMemoryRequirementsCount, VkVideoGetMemoryPropertiesKHR* pVideoSessionMemoryRequirements) const noexcept {
+		return fp_vkGetVideoSessionMemoryRequirementsKHR(device, videoSession, pVideoSessionMemoryRequirementsCount, pVideoSessionMemoryRequirements);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t bindSessionMemoryInfoCount, const VkBindVideoSessionMemoryInfoKHR* pBindSessionMemoryInfos) const noexcept {
-		return fp_vkBindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
+	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t videoSessionBindMemoryCount, const VkVideoBindMemoryKHR* pVideoSessionBindMemories) const noexcept {
+		return fp_vkBindVideoSessionMemoryKHR(device, videoSession, videoSessionBindMemoryCount, pVideoSessionBindMemories);
 	}
 #endif
 #if (defined(VK_KHR_video_decode_queue))
@@ -2761,16 +2731,6 @@ struct DispatchTable {
 #if (defined(VK_EXT_metal_objects))
 	void exportMetalObjectsEXT(VkExportMetalObjectsInfoEXT* pMetalObjectsInfo) const noexcept {
 		fp_vkExportMetalObjectsEXT(device, pMetalObjectsInfo);
-	}
-#endif
-#if (defined(VK_QCOM_tile_properties))
-	VkResult getFramebufferTilePropertiesQCOM(VkFramebuffer framebuffer, uint32_t* pPropertiesCount, VkTilePropertiesQCOM* pProperties) const noexcept {
-		return fp_vkGetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
-	}
-#endif
-#if (defined(VK_QCOM_tile_properties))
-	VkResult getDynamicRenderingTilePropertiesQCOM(const VkRenderingInfoKHR* pRenderingInfo, VkTilePropertiesQCOM* pProperties) const noexcept {
-		return fp_vkGetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
 	}
 #endif
 #if (defined(VK_EXT_host_query_reset))
@@ -3589,15 +3549,6 @@ struct DispatchTable {
 #if (defined(VK_NV_mesh_shader))
 	PFN_vkCmdDrawMeshTasksIndirectCountNV fp_vkCmdDrawMeshTasksIndirectCountNV = nullptr;
 #endif
-#if (defined(VK_EXT_mesh_shader))
-	PFN_vkCmdDrawMeshTasksEXT fp_vkCmdDrawMeshTasksEXT = nullptr;
-#endif
-#if (defined(VK_EXT_mesh_shader))
-	PFN_vkCmdDrawMeshTasksIndirectEXT fp_vkCmdDrawMeshTasksIndirectEXT = nullptr;
-#endif
-#if (defined(VK_EXT_mesh_shader))
-	PFN_vkCmdDrawMeshTasksIndirectCountEXT fp_vkCmdDrawMeshTasksIndirectCountEXT = nullptr;
-#endif
 #if (defined(VK_NV_ray_tracing))
 	PFN_vkCompileDeferredNV fp_vkCompileDeferredNV = nullptr;
 #endif
@@ -3987,12 +3938,6 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_metal_objects))
 	PFN_vkExportMetalObjectsEXT fp_vkExportMetalObjectsEXT = nullptr;
-#endif
-#if (defined(VK_QCOM_tile_properties))
-	PFN_vkGetFramebufferTilePropertiesQCOM fp_vkGetFramebufferTilePropertiesQCOM = nullptr;
-#endif
-#if (defined(VK_QCOM_tile_properties))
-	PFN_vkGetDynamicRenderingTilePropertiesQCOM fp_vkGetDynamicRenderingTilePropertiesQCOM = nullptr;
 #endif
 #if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

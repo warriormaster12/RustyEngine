@@ -1,5 +1,4 @@
 #include "geometry_pipeline.h"
-#include "glm/gtc/matrix_transform.hpp"
 #include "components/mesh.h"
 #include "components/transform.h"
 

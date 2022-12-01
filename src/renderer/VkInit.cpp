@@ -147,8 +147,11 @@ void VulkanDevice::CreateDevice() {
         //We want a GPU that can write to the SDL surface and supports Vulkan 1.3
         vkb::PhysicalDeviceSelector selector{ vkb_inst };
 
-        VkPhysicalDeviceVulkan13Features feats{};
-        feats.dynamicRendering = VK_TRUE;
+        
+
+        VkPhysicalDeviceVulkan13Features feats3{};
+        feats3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+        feats3.dynamicRendering = VK_TRUE;
 
         VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeats{};
         descriptorIndexingFeats.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
@@ -161,9 +164,19 @@ void VulkanDevice::CreateDevice() {
         descriptorIndexingFeats.descriptorBindingUniformBufferUpdateAfterBind = VK_TRUE;
         descriptorIndexingFeats.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
 
+        VkPhysicalDeviceVulkan12Features feats2{};
+        feats2.descriptorIndexing = VK_TRUE;
+        feats2.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
+        feats2.runtimeDescriptorArray = VK_TRUE;
+        feats2.descriptorBindingVariableDescriptorCount = VK_TRUE;
+        feats2.descriptorBindingPartiallyBound = VK_TRUE;
+        feats2.descriptorBindingUniformBufferUpdateAfterBind = VK_TRUE;
+        feats2.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
+
         vkb::PhysicalDevice physicalDeviceSelector = selector
             .set_minimum_version(1, 3)
-            .set_required_features_13(feats)
+            .set_required_features_13(feats3)
+            .set_required_features_12(feats2)
             .set_surface(surface)
             .select()
             .value();
@@ -171,7 +184,7 @@ void VulkanDevice::CreateDevice() {
         //create the final Vulkan device
         vkb::DeviceBuilder deviceBuilder{ physicalDeviceSelector };
 
-        vkb::Device vkbDevice = deviceBuilder.add_pNext(&descriptorIndexingFeats).build().value();
+        vkb::Device vkbDevice = deviceBuilder.build().value();
 
 
         // Get the VkDevice handle used in the rest of a Vulkan application
