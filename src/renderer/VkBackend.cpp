@@ -133,25 +133,7 @@ void VulkanRBE::BeginRenderLayer( uint32_t width /*= 0*/, uint32_t height /*= 0*
         currentPipeline->bound = true;
         for (int i = 0; i < currentPipeline->descriptorSets.size(); i++) {
             auto& currentSet = currentPipeline->descriptorSets[i];
-            std::vector<VkWriteDescriptorSet> writes;
-            for(auto& binding : currentSet.bindingInfo) {
-                VkWriteDescriptorSet  writeDescriptorSets{};
-                writeDescriptorSets.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                writeDescriptorSets.dstSet = currentSet.set;
-                writeDescriptorSets.dstBinding = binding.binding;
-                writeDescriptorSets.descriptorType = binding.descriptorTypes;
-                writeDescriptorSets.descriptorCount = 1;
-                if (currentSet.descriptorBufferImageInfos.size() > 0) {
-                    if ( binding.descriptorTypes == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER || binding.descriptorTypes == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER) {
-                        writeDescriptorSets.pBufferInfo = &currentSet.descriptorBufferImageInfos[binding.binding].buffInfo;
-                    }
-                }
-                writes.push_back(writeDescriptorSets);
-            }
-
-            vkUpdateDescriptorSets(VulkanDevice::GetGlobalDevice(), writes.size(), writes.data(), 0, nullptr);
             vkCmdBindDescriptorSets(currentFrame->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, currentPipeline->pipelineLayout, i, 1, &currentSet.set, 0, 0);
-            //vkCmdPushDescriptorSetKHR(currentFrame->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, currentPipeline->pipelineLayout, i, writes.size(), writes.data());
         }
     }
 }

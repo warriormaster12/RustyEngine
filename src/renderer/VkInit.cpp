@@ -148,7 +148,7 @@ void VulkanDevice::CreateDevice() {
         //We want a GPU that can write to the SDL surface and supports Vulkan 1.3
         vkb::PhysicalDeviceSelector selector{ vkb_inst };
 
-        
+
 
         VkPhysicalDeviceVulkan13Features feats3{};
         feats3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
@@ -163,6 +163,7 @@ void VulkanDevice::CreateDevice() {
         feats2.descriptorBindingPartiallyBound = VK_TRUE;
         feats2.descriptorBindingUniformBufferUpdateAfterBind = VK_FALSE;
         feats2.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
+        feats2.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
 
 
         auto physicalDeviceSelector = selector

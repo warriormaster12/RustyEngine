@@ -850,14 +850,19 @@ std::vector<VkDescriptorSetLayout> ShaderProgram::GenerateDescriptorLayouts( Pip
 			return a.binding < b.binding;
 		});
 
-        VkDescriptorBindingFlags flags[2];
-        flags[0] = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
-        flags[1] = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
-
+        std::vector<VkDescriptorBindingFlags> flags;
+        for(auto& currentBinding : ly.bindings){
+            if(currentBinding.descriptorType != VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
+                flags.push_back(VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT);
+            }
+            else {
+                flags.push_back(0);
+            }
+        }
         VkDescriptorSetLayoutBindingFlagsCreateInfo bindingFlags{};
         bindingFlags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
         bindingFlags.bindingCount = (uint32_t)ly.bindings.size();
-        bindingFlags.pBindingFlags = flags;
+        bindingFlags.pBindingFlags = flags.data();
 
 		ly.createInfo.bindingCount = (uint32_t)ly.bindings.size();
 		ly.createInfo.pBindings = ly.bindings.data();

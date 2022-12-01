@@ -34,55 +34,7 @@ struct PerFrameData {
     }
 };
 
-/*
-===============
-PipelineBuilder
-===============
-*/
-struct Pipeline {
-	VkPipeline pipeline = VK_NULL_HANDLE;
-	VkViewport viewport;
-	VkRect2D scissor;
-	VkPipelineLayout pipelineLayout;
-    bool depthEnabled = true;
-    bool bound = false;
-    struct DescriptorInfo {
-        struct BindingInfo {
-            VkShaderStageFlags shaderStageFlags;
-            VkDescriptorType descriptorTypes;
-            uint32_t binding;
-        };
 
-        std::vector<BindingInfo> bindingInfo;
-        VkDescriptorSet set = VK_NULL_HANDLE;
-
-        struct DescriptorBufferImageInfo {
-            VkDescriptorBufferInfo buffInfo = {};
-            VkDescriptorImageInfo imageInfo = {};
-        };
-
-        std::vector<DescriptorBufferImageInfo> descriptorBufferImageInfos;
-        void GenerateDescriptorBuffers( VkDescriptorBufferInfo& buffInfo ) {
-            DescriptorBufferImageInfo info = {};
-            info.buffInfo = buffInfo;
-            descriptorBufferImageInfos.push_back(info);
-        }
-        void GenerateDescriptorImages( VkDescriptorImageInfo& imageInfo ) {
-            DescriptorBufferImageInfo info = {};
-            info.imageInfo = imageInfo;
-            descriptorBufferImageInfos.push_back(info);
-        }
-    };
-    std::vector<DescriptorInfo> descriptorSets;
-
-
-    void DestroyPipeline();
-};
-
-class PipelineBuilder {
-public:
-	static bool BuildGraphicsPipeline(std::vector<const char*> files, std::vector<VkShaderStageFlagBits> shaderStageFlags, Pipeline& idpipeline);
-};
 
 class VulkanDevice {
 public:
@@ -137,6 +89,72 @@ private:
 
     static inline const int frameOverlap = 2;
     static inline PerFrameData perFrameData[frameOverlap];
+};
+
+/*
+===============
+PipelineBuilder
+===============
+*/
+struct Pipeline {
+	VkPipeline pipeline = VK_NULL_HANDLE;
+	VkViewport viewport;
+	VkRect2D scissor;
+	VkPipelineLayout pipelineLayout;
+    bool depthEnabled = true;
+    bool bound = false;
+    struct DescriptorInfo {
+        struct BindingInfo {
+            VkShaderStageFlags shaderStageFlags;
+            VkDescriptorType descriptorTypes;
+            uint32_t binding;
+        };
+
+        std::vector<BindingInfo> bindingInfo;
+        VkDescriptorSet set = VK_NULL_HANDLE;
+
+        struct DescriptorBufferImageInfo {
+            VkDescriptorBufferInfo buffInfo = {};
+            VkDescriptorImageInfo imageInfo = {};
+        };
+
+        std::vector<DescriptorBufferImageInfo> descriptorBufferImageInfos;
+        void GenerateDescriptorBuffers( VkDescriptorBufferInfo& buffInfo ) {
+            DescriptorBufferImageInfo info = {};
+            info.buffInfo = buffInfo;
+            descriptorBufferImageInfos.push_back(info);
+            std::vector<VkWriteDescriptorSet> writes;
+            for(auto& binding : bindingInfo) {
+                VkWriteDescriptorSet  writeDescriptorSets{};
+                writeDescriptorSets.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeDescriptorSets.dstSet = set;
+                writeDescriptorSets.dstBinding = binding.binding;
+                writeDescriptorSets.descriptorType = binding.descriptorTypes;
+                writeDescriptorSets.descriptorCount = 1;
+                if (descriptorBufferImageInfos.size() > 0) {
+                    if ( binding.descriptorTypes == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER || binding.descriptorTypes == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER) {
+                        writeDescriptorSets.pBufferInfo = &descriptorBufferImageInfos[binding.binding].buffInfo;
+                    }
+                }
+                writes.push_back(writeDescriptorSets);
+            }
+            vkUpdateDescriptorSets(VulkanDevice::GetGlobalDevice(), writes.size(), writes.data(), 0, nullptr);
+        }
+        void GenerateDescriptorImages( VkDescriptorImageInfo& imageInfo ) {
+            DescriptorBufferImageInfo info = {};
+            info.imageInfo = imageInfo;
+            descriptorBufferImageInfos.push_back(info);
+        }
+    };
+    std::vector<DescriptorInfo> descriptorSets;
+
+
+    void DestroyPipeline();
+};
+
+class PipelineBuilder {
+public:
+	static bool BuildGraphicsPipeline(std::vector<const char*> files, std::vector<VkShaderStageFlagBits> shaderStageFlags, Pipeline& idpipeline);
 };
 
 class VulkanRBE {
