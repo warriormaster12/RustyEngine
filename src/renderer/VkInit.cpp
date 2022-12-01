@@ -126,6 +126,7 @@ void VulkanDevice::Init(){
     vkb::InstanceBuilder builder;
 
     auto inst_ret = builder.set_app_name("Rusty Engine")
+    .set_minimum_instance_version(1,3,0)
     .request_validation_layers(true)
     .require_api_version(1,3,0)
     .use_default_debug_messenger()
@@ -153,43 +154,38 @@ void VulkanDevice::CreateDevice() {
         feats3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
         feats3.dynamicRendering = VK_TRUE;
 
-        VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeats{};
-        descriptorIndexingFeats.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-
-        // Enable non-uniform indexing
-        descriptorIndexingFeats.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
-        descriptorIndexingFeats.runtimeDescriptorArray = VK_TRUE;
-        descriptorIndexingFeats.descriptorBindingVariableDescriptorCount = VK_TRUE;
-        descriptorIndexingFeats.descriptorBindingPartiallyBound = VK_TRUE;
-        descriptorIndexingFeats.descriptorBindingUniformBufferUpdateAfterBind = VK_TRUE;
-        descriptorIndexingFeats.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
-
         VkPhysicalDeviceVulkan12Features feats2{};
+        feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
         feats2.descriptorIndexing = VK_TRUE;
         feats2.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
         feats2.runtimeDescriptorArray = VK_TRUE;
         feats2.descriptorBindingVariableDescriptorCount = VK_TRUE;
         feats2.descriptorBindingPartiallyBound = VK_TRUE;
-        feats2.descriptorBindingUniformBufferUpdateAfterBind = VK_TRUE;
+        feats2.descriptorBindingUniformBufferUpdateAfterBind = VK_FALSE;
         feats2.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
 
-        vkb::PhysicalDevice physicalDeviceSelector = selector
-            .set_minimum_version(1, 3)
-            .set_required_features_13(feats3)
-            .set_required_features_12(feats2)
-            .set_surface(surface)
-            .select()
-            .value();
 
+        auto physicalDeviceSelector = selector
+            .disable_portability_subset()
+            .prefer_gpu_device_type()
+            .set_minimum_version(1, 3)
+            .set_required_features_12(feats2)
+            .set_required_features_13(feats3)
+            .set_surface(surface)
+            .select();
+
+        if(physicalDeviceSelector) {
+            ENGINE_ERROR("{}",physicalDeviceSelector->name);
+        }
         //create the final Vulkan device
-        vkb::DeviceBuilder deviceBuilder{ physicalDeviceSelector };
+        vkb::DeviceBuilder deviceBuilder{ physicalDeviceSelector.value() };
 
         vkb::Device vkbDevice = deviceBuilder.build().value();
 
 
         // Get the VkDevice handle used in the rest of a Vulkan application
         device = vkbDevice.device;
-        physicalDevice = physicalDeviceSelector.physical_device;
+        physicalDevice = physicalDeviceSelector.value().physical_device;
 
         // use vkbootstrap to get a Graphics queue
         graphicsQueue = vkbDevice.get_queue(vkb::QueueType::graphics).value();
@@ -241,7 +237,7 @@ void VulkanDevice::CreateDevice() {
 
 
         vkGetPhysicalDeviceProperties(physicalDevice, &gpuProperties);
-        ENGINE_INFO("GPU Vendor:{0} Vulkan Version: {1}", physicalDeviceSelector.properties.deviceName,physicalDeviceSelector.properties.apiVersion);
+        ENGINE_INFO("GPU Vendor:{0} Vulkan Version: {1}", physicalDeviceSelector.value().properties.deviceName,physicalDeviceSelector.value().properties.apiVersion);
 
         //creating and allocating at the application startup time should be enough
         CreateCommandBuffer();
