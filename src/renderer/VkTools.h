@@ -42,7 +42,7 @@ namespace VkTools {
 		VkBuffer buffer = VK_NULL_HANDLE;
 		VkDescriptorBufferInfo descBuffInfo = {};
 
-		void AllocateBuffer( const VkBufferUsageFlags& usage, VmaMemoryUsage memoryUsage, const uint32_t& dataSize, const uint32_t& typeSize );
+		void AllocateBuffer( const VkBufferUsageFlags& usage, VmaMemoryUsage memoryUsage, const uint32_t& dataSize );
 
 		void UploadBufferData( const void* pdata, const uint32_t& offset = 0 );
 

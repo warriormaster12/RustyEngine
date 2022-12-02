@@ -4,7 +4,7 @@
 
 
 void Camera::on_ready() {
-	cameraBuffer.AllocateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU, 1, sizeof(glm::mat4));
+	cameraBuffer.AllocateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU, sizeof(glm::mat4));
 }
 
 

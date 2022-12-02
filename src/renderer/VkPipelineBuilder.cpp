@@ -852,11 +852,11 @@ std::vector<VkDescriptorSetLayout> ShaderProgram::GenerateDescriptorLayouts( Pip
 
         std::vector<VkDescriptorBindingFlags> flags;
         for(auto& currentBinding : ly.bindings){
-            if(currentBinding.descriptorType != VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
-                flags.push_back(VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT);
+            if(currentBinding.descriptorType != VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE) {
+                flags.push_back(0);
             }
             else {
-                flags.push_back(0);
+                flags.push_back(VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT);
             }
         }
         VkDescriptorSetLayoutBindingFlagsCreateInfo bindingFlags{};

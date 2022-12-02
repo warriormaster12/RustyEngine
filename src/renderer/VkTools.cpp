@@ -134,14 +134,14 @@ namespace VkTools {
     }
 
 
-    void AllocatedBuffer::AllocateBuffer( const VkBufferUsageFlags& usage, VmaMemoryUsage memoryUsage,const uint32_t& dataSize, const uint32_t& typeSize  ) {
+    void AllocatedBuffer::AllocateBuffer( const VkBufferUsageFlags& usage, VmaMemoryUsage memoryUsage,const uint32_t& dataSize  ) {
         if ( buffer == VK_NULL_HANDLE ){
             if(dataSize > 0) {
                 //allocate vertex buffer
                 VkBufferCreateInfo bufferInfo = {};
                 bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 //this is the total size, in bytes, of the buffer we are allocating
-                bufferSize = dataSize * typeSize;
+                bufferSize = dataSize;
                 bufferInfo.size = bufferSize;
                 //this buffer is going to be used as a Vertex Buffer
                 bufferInfo.usage = usage;

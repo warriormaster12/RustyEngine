@@ -161,8 +161,6 @@ void VulkanDevice::CreateDevice() {
         feats2.runtimeDescriptorArray = VK_TRUE;
         feats2.descriptorBindingVariableDescriptorCount = VK_TRUE;
         feats2.descriptorBindingPartiallyBound = VK_TRUE;
-        feats2.descriptorBindingUniformBufferUpdateAfterBind = VK_FALSE;
-        feats2.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
         feats2.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
 
 
@@ -174,10 +172,8 @@ void VulkanDevice::CreateDevice() {
             .set_required_features_13(feats3)
             .set_surface(surface)
             .select();
-
-        if(physicalDeviceSelector) {
-            ENGINE_ERROR("{}",physicalDeviceSelector->name);
-        }
+        
+        
         //create the final Vulkan device
         vkb::DeviceBuilder deviceBuilder{ physicalDeviceSelector.value() };
 
