@@ -29,6 +29,9 @@ void GeometryPipeline::Update(Camera* camera) {
         if (entity->GetComponent<Transform>() != nullptr) {
             modelMatricies.push_back(entity->GetComponent<Transform>()->GetModelMatrix());
         }
+        else {
+            modelMatricies.push_back(glm::mat4(1.0f));
+        }
         entities[0]->GetComponent<Mesh>()->modelBuffer.UploadBufferData(modelMatricies.data());
         camera->renderMatrix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
         if(entity->GetComponent<Mesh>()->vertices.size() > 0) {

@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
     my_entity2.GetComponent<Transform>()->position = {-1.0f,-0.3f, 0.0f};
     my_entity2.GetComponent<Transform>()->rotation = {45.0f, 0.0f, 0.0f};
 
+    my_entity3.AddComponent<Mesh>();
+
 
     ModelLoader::LoadFile("samples/models/suzanne.gltf", my_entity3);
 
