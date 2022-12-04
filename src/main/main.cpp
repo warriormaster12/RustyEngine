@@ -6,15 +6,16 @@
 #include "components/camera.h"
 #include "components/mesh.h"
 #include "components/transform.h"
-#include "entity.h"
-#include "logger.h"
 
+#include "logger.h"
+#include "model_loader.h"
 
 
 int main(int argc, char* argv[]) {
     Logger::Init();
     Entity my_entity;
     Entity my_entity2;
+    Entity my_entity3;
     my_entity.AddComponent<Camera>();
     my_entity.AddComponent<Mesh>();
     my_entity.AddComponent<Transform>();
@@ -28,6 +29,9 @@ int main(int argc, char* argv[]) {
     my_entity2.GetComponent<Transform>()->rotation = {45.0f, 0.0f, 0.0f};
 
 
+    ModelLoader::LoadFile("samples/models/suzanne.gltf", my_entity3);
+
+
     VulkanDevice::Init();
     Window::Init();
     VulkanDevice::CreateDevice();
@@ -35,10 +39,12 @@ int main(int argc, char* argv[]) {
 
     my_entity.Start();
     my_entity2.Start();
+    my_entity3.Start();
 
     PipelineManager::AddPipeline<GeometryPipeline>();
     PipelineManager::AddEntityToList<GeometryPipeline>(&my_entity);
     PipelineManager::AddEntityToList<GeometryPipeline>(&my_entity2);
+    PipelineManager::AddEntityToList<GeometryPipeline>(&my_entity3);
     PipelineManager::GetPipeline<GeometryPipeline>()->Prepare(my_entity.GetComponent<Camera>());
 
     while ( Window::Running() ) {
@@ -47,6 +53,7 @@ int main(int argc, char* argv[]) {
         VulkanRBE::SubmitFrame();
         my_entity.Update(VulkanRBE::frameCount);
         my_entity2.Update(VulkanRBE::frameCount);
+        my_entity3.Update(VulkanRBE::frameCount);
     }
     VulkanDevice::Shutdown();
     Window::Shutdown();

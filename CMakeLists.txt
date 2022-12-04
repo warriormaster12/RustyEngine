@@ -16,6 +16,8 @@ ${PROJECT_SOURCE_DIR}/src/main/*
 ${PROJECT_SOURCE_DIR}/src/window/window.cpp
 ${PROJECT_SOURCE_DIR}/src/scene/*
 ${PROJECT_SOURCE_DIR}/src/logger/logger.cpp
+${PROJECT_SOURCE_DIR}/src/tools/model_loading/third-party/tiny_gltf.cpp
+${PROJECT_SOURCE_DIR}/src/tools/model_loading/model_loader.cpp
 )
 
 add_executable(RustyEngine ${SRC})
@@ -34,6 +36,8 @@ target_include_directories(RustyEngine PUBLIC
     src/scene/
     src/logger/
     src/logger/third-party/
+    src/tools/model_loading/third-party/
+    src/tools/model_loading/
     lib/glm/
 )
 
@@ -42,6 +46,7 @@ add_subdirectory(src/window/third-party/glfw/)
 target_link_libraries(RustyEngine PRIVATE glfw)
 
 file(COPY ${PROJECT_SOURCE_DIR}/src/shaders DESTINATION ${PROJECT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/samples DESTINATION ${PROJECT_BINARY_DIR})
 
 
 
