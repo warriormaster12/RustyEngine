@@ -30,16 +30,24 @@ void ModelLoader::LoadFile(const std::string &file, Entity& outEntity) {
             auto& verticies = outEntity.GetComponent<Mesh>()->vertices;
             auto& indicies = outEntity.GetComponent<Mesh>()->indicies;
             if(primitive.attributes.find("POSITION") != primitive.attributes.end())  {
-                const tinygltf::Accessor& accessor = model.accessors[primitive.attributes["POSITION"]];
+                const tinygltf::Accessor& accessor = model.accessors[primitive.attributes.find("POSITION")->second];
                 const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
 
                 const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
                 const float* positions = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
-                verticies = {};
                 verticies.resize(accessor.count);
                 for (size_t i = 0; i < accessor.count; ++i) {
                    verticies[i].position = glm::vec3(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]);
-                   verticies[i].color = glm::vec3(1.0f);
+                }
+            }
+            if (primitive.attributes.find("NORMAL") != primitive.attributes.end()) {
+                const tinygltf::Accessor& accessor = model.accessors[primitive.attributes.find("NORMAL")->second];
+                const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
+
+                const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+                const float* normals = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+                for (size_t i = 0; i < accessor.count; ++i) {
+                   verticies[i].normals = glm::vec3(normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2]);
                 }
             }
             if(primitive.indices > 0) {

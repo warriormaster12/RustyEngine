@@ -101,6 +101,7 @@ struct Pipeline {
 	VkViewport viewport;
 	VkRect2D scissor;
 	VkPipelineLayout pipelineLayout;
+    std::vector<std::string> vertexInputs;
     bool depthEnabled = true;
     bool bound = false;
     struct DescriptorInfo {

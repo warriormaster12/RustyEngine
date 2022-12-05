@@ -231,7 +231,7 @@ bool LoadShaderModule(std::vector<const char*> shaderFiles, ShaderProgram& progr
 }
 
 
-bool GetVertexDescription(std::vector<SpvReflectInterfaceVariable*> inputVars, VertexInputDescription& outDescription)
+bool GetVertexDescription(std::vector<SpvReflectInterfaceVariable*> inputVars, VertexInputDescription& outDescription, Pipeline* pipeline = nullptr)
 {
     //we will have just 1 vertex buffer binding, with a per-vertex rate
 	VkVertexInputBindingDescription description = {};
@@ -244,6 +244,9 @@ bool GetVertexDescription(std::vector<SpvReflectInterfaceVariable*> inputVars, V
         const SpvReflectInterfaceVariable& refl_var = *(inputVars[i]);
         if (refl_var.decoration_flags & SPV_REFLECT_DECORATION_BUILT_IN) {
             continue;
+        }
+        if (pipeline != nullptr) {
+            pipeline->vertexInputs.push_back(refl_var.name);
         }
         VkVertexInputAttributeDescription attribute = {};
         attribute.binding = description.binding;
@@ -445,7 +448,7 @@ bool PipelineBuilder::BuildGraphicsPipeline(std::vector<const char *> files, std
             result = spvReflectEnumerateInputVariables(&currentModule, &varCount, inputVars.data());
             assert(result == SPV_REFLECT_RESULT_SUCCESS);
             vertexDescription = {};
-            if (GetVertexDescription(inputVars, vertexDescription)) {
+            if (GetVertexDescription(inputVars, vertexDescription, &Pipeline)) {
                 vertexInputInfo.pVertexAttributeDescriptions = vertexDescription.attributes.data();
                 vertexInputInfo.vertexAttributeDescriptionCount = vertexDescription.attributes.size();
                 vertexInputInfo.pVertexBindingDescriptions = vertexDescription.bindings.data();

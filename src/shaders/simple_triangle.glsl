@@ -4,6 +4,7 @@
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vColor;
+layout (location = 2) in vec3 vNormal;
 
 layout (location = 0) out vec3 outColor;
 
@@ -23,7 +24,7 @@ layout(std140,set = 1, binding = 0) readonly buffer ObjectBuffer{
 void main() {
     mat4 modelMatrix = objectBuffer.objects[gl_InstanceIndex].model;
 	gl_Position = (camBuffer.renderMatrix * modelMatrix) * vec4(vPosition, 1.0);
-	outColor = vColor;
+	outColor = vNormal;
 }
 
 #elif defined(STAGE_FRAGMENT)

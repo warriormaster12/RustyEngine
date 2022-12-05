@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     Logger::Init();
     Entity my_entity;
     Entity my_entity2;
-    Entity my_entity3;
+
     my_entity.AddComponent<Camera>();
     my_entity.AddComponent<Mesh>();
     my_entity.AddComponent<Transform>();
@@ -28,10 +28,9 @@ int main(int argc, char* argv[]) {
     my_entity2.GetComponent<Transform>()->position = {-1.0f,-0.3f, 0.0f};
     my_entity2.GetComponent<Transform>()->rotation = {45.0f, 0.0f, 0.0f};
 
-    my_entity3.AddComponent<Mesh>();
 
-
-    ModelLoader::LoadFile("samples/models/suzanne.gltf", my_entity3);
+    ModelLoader::LoadFile("samples/models/chinesedragon.gltf", my_entity);
+    ModelLoader::LoadFile("samples/models/suzanne.gltf", my_entity2);
 
 
     VulkanDevice::Init();
@@ -41,12 +40,10 @@ int main(int argc, char* argv[]) {
 
     my_entity.Start();
     my_entity2.Start();
-    my_entity3.Start();
 
     PipelineManager::AddPipeline<GeometryPipeline>();
     PipelineManager::AddEntityToList<GeometryPipeline>(&my_entity);
     PipelineManager::AddEntityToList<GeometryPipeline>(&my_entity2);
-    PipelineManager::AddEntityToList<GeometryPipeline>(&my_entity3);
     PipelineManager::GetPipeline<GeometryPipeline>()->Prepare(my_entity.GetComponent<Camera>());
 
     while ( Window::Running() ) {
@@ -55,7 +52,6 @@ int main(int argc, char* argv[]) {
         VulkanRBE::SubmitFrame();
         my_entity.Update(VulkanRBE::frameCount);
         my_entity2.Update(VulkanRBE::frameCount);
-        my_entity3.Update(VulkanRBE::frameCount);
     }
     VulkanDevice::Shutdown();
     Window::Shutdown();
