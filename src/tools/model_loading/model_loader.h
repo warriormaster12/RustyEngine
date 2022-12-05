@@ -9,6 +9,6 @@
 
 class ModelLoader{
 public:
-    static void LoadFile(const std::string& file, Entity& outEntities);
+    static void LoadFile(const std::string& file, std::vector<Entity>& outEntities);
 
 };

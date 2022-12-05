@@ -26,16 +26,18 @@ void GeometryPipeline::Update(Camera* camera) {
     std::vector<glm::mat4> modelMatricies;
     for(int i=0; i < entities.size(); i++) {
         auto entity = entities[i];
-        modelMatricies.push_back(entity->GetComponent<Mesh>()->modelMatrix);
-        entities[0]->GetComponent<Mesh>()->modelBuffer.UploadBufferData(modelMatricies.data());
-        camera->renderMatrix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
-        if(entity->GetComponent<Mesh>()->vertices.size() > 0) {
-            VulkanRBE::BindVertexBuffer(0, 1, entity->GetComponent<Mesh>()->vertexBuffer);
-            if(entity->GetComponent<Mesh>()->indicies.size() > 0) {
-                VulkanRBE::BindIndexBuffer(entity->GetComponent<Mesh>()->indexBuffer);
-                VulkanRBE::DrawIndexed(entity->GetComponent<Mesh>()->indicies.size(),1,0, 0, i);
-            }else {
-                VulkanRBE::Draw(entity->GetComponent<Mesh>()->vertices.size(),1,0,i);
+        if(entity->GetComponent<Mesh>() != nullptr) {
+            modelMatricies.push_back(entity->GetComponent<Mesh>()->modelMatrix);
+            entities[0]->GetComponent<Mesh>()->modelBuffer.UploadBufferData(modelMatricies.data());
+            camera->renderMatrix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+            if(entity->GetComponent<Mesh>()->vertices.size() > 0) {
+                VulkanRBE::BindVertexBuffer(0, 1, entity->GetComponent<Mesh>()->vertexBuffer);
+                if(entity->GetComponent<Mesh>()->indicies.size() > 0) {
+                    VulkanRBE::BindIndexBuffer(entity->GetComponent<Mesh>()->indexBuffer);
+                    VulkanRBE::DrawIndexed(entity->GetComponent<Mesh>()->indicies.size(),1,0, 0, i);
+                }else {
+                    VulkanRBE::Draw(entity->GetComponent<Mesh>()->vertices.size(),1,0,i);
+                }
             }
         }
     }
