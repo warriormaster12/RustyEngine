@@ -14,7 +14,9 @@
 int main(int argc, char* argv[]) {
     Logger::Init();
     Entity my_entity;
+    my_entity.name = "dragon";
     Entity my_entity2;
+    my_entity2.name = "suzanne";
 
     my_entity.AddComponent<Camera>();
     my_entity.AddComponent<Mesh>();

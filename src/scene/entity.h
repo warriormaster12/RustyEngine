@@ -9,6 +9,8 @@
 
 class Entity {
 public:
+    std::string name;
+
     void Start() {
         for(auto& component : component_list) {
             component->on_ready();
@@ -30,6 +32,9 @@ public:
                 else {
                     std::unique_ptr<T> component = std::make_unique<T>();
                     component->type_name = typeid(T).name();
+                    if (component->entity == nullptr) {
+                        component->entity = this;
+                    }
                     component_list.push_back(std::move(component));
                     break;
                 }
@@ -38,6 +43,9 @@ public:
         else {
             std::unique_ptr<T> component = std::make_unique<T>();
             component->type_name = typeid(T).name();
+            if (component->entity == nullptr) {
+                component->entity = this;
+            }
             component_list.push_back(std::move(component));
         }
     }

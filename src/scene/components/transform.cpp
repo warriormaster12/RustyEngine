@@ -6,7 +6,7 @@ void Transform::on_ready() {
 
 
 void Transform::update(const double &delta){
-    rotation.y = glm::radians(delta * 0.4f);
+    
 }
 
 glm::mat4 Transform::GetModelMatrix() {

@@ -1,5 +1,6 @@
 #include "mesh.h"
 #include "transform.h"
+#include "entity.h"
 
 
 void Mesh::on_ready() {
@@ -18,5 +19,10 @@ void Mesh::on_ready() {
 
 
 void Mesh::update(const double &delta){
+    if(entity != nullptr) {
+        if (entity->GetComponent<Transform>() != nullptr) {
+            modelMatrix = entity->GetComponent<Transform>()->GetModelMatrix();
+        }
+    }
     //modelBuffer.UploadBufferData(&modelMatrix);
 }

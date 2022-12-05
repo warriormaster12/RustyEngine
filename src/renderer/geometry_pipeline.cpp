@@ -26,12 +26,7 @@ void GeometryPipeline::Update(Camera* camera) {
     std::vector<glm::mat4> modelMatricies;
     for(int i=0; i < entities.size(); i++) {
         auto entity = entities[i];
-        if (entity->GetComponent<Transform>() != nullptr) {
-            modelMatricies.push_back(entity->GetComponent<Transform>()->GetModelMatrix());
-        }
-        else {
-            modelMatricies.push_back(glm::mat4(1.0f));
-        }
+        modelMatricies.push_back(entity->GetComponent<Mesh>()->modelMatrix);
         entities[0]->GetComponent<Mesh>()->modelBuffer.UploadBufferData(modelMatricies.data());
         camera->renderMatrix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
         if(entity->GetComponent<Mesh>()->vertices.size() > 0) {
