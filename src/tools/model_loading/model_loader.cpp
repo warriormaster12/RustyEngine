@@ -32,9 +32,15 @@ void ModelLoader::LoadFile(const std::string &file, std::vector<Entity>& outEnti
             entity.AddComponent<Transform>();
             entity.AddComponent<Mesh>();
             auto* transform = entity.GetComponent<Transform>();
-            transform->position = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
-            transform->scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
-            transform->rotation = glm::vec3(node.rotation[0], node.rotation[1], node.rotation[2]);
+            if (node.translation.size() > 0) {
+                transform->position = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
+            }
+            if (node.scale.size() > 0) {
+                transform->scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
+            }
+            if (node.scale.size() > 0) {
+                transform->rotation = glm::vec3(node.rotation[0], node.rotation[1], node.rotation[2]);
+            }
 
             for(auto primitive : model.meshes[node.mesh].primitives) {
                 auto& verticies = entity.GetComponent<Mesh>()->vertices;

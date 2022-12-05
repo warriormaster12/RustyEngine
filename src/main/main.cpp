@@ -22,11 +22,8 @@ int main(int argc, char* argv[]) {
     my_entity2.name = "suzanne";
 
     my_entity.AddComponent<Camera>();
-    //my_entity.AddComponent<Mesh>();
     my_entity.AddComponent<Transform>();
-
-    my_entity.GetComponent<Transform>()->position = {1.0f, 0.3f, 0.0f};
-    my_entity.GetComponent<Transform>()->scale= {1.1f,1.1f,1.1f};
+    my_entity.GetComponent<Transform>()->position = {0.0f, 0.0f, 9.0f};
 
     my_entity2.AddComponent<Mesh>();
     my_entity2.AddComponent<Transform>();
@@ -35,7 +32,7 @@ int main(int argc, char* argv[]) {
 
 
     ModelLoader::LoadFile("samples/models/chinesedragon.gltf", chinesedragon);
-    ModelLoader::LoadFile("samples/models/sponza.gltf", sponza);
+    ModelLoader::LoadFile("samples/models/suzanne.gltf", sponza);
 
 
     VulkanDevice::Init();

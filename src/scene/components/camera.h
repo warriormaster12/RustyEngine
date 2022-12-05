@@ -4,6 +4,7 @@
 #include "glm.hpp"
 #include "VkInit.h"
 
+class Transform;
 
 class Camera : public Component{
 public:
@@ -25,4 +26,6 @@ public:
     float zNear = 0.1f;
 	float zFar = 100.0f;
     VkTools::AllocatedBuffer cameraBuffer;
+
+    Transform* transform;
 };
