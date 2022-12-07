@@ -17,7 +17,7 @@ void Transform::SetPosition(const glm::vec3& value){
 }
 
 void Transform::SetRotation(const glm::vec3& value){
-    rotation = value;
+    rotation = glm::radians(value);
     transformMatrix = GetModelMatrix();
 }
 
@@ -38,9 +38,9 @@ void Transform::SetTransformMatrix(const glm::mat4& value){
     auto S1 = glm::sin(T1);
     auto C1 = glm::cos(T1);
     auto T3 = glm::atan2(S1*value[0][2] - C1*value[0][1], C1*value[1][1] - S1*value[1][2  ]);
-    rotation = glm::vec3(-T1,-T2,-T3);
+    rotation = glm::vec3(-T3,-T1,-T2);
 
-    transformMatrix = GetTransformMatrix();
+    transformMatrix = GetModelMatrix();
 }
 
 glm::mat4 Transform::GetModelMatrix() {

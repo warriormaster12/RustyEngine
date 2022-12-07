@@ -4,6 +4,7 @@
 #include "components/transform.h"
 
 
+
 void Camera::on_ready() {
 	cameraBuffer.AllocateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU, sizeof(glm::mat4));
 }
@@ -45,7 +46,7 @@ glm::mat4 Camera::GetViewMatrix() const
 
 glm::mat4 Camera::GetProjectionMatrix() const
 {
-    glm::mat4 pro = glm::perspective(glm::radians(fov), (float)1280/(float)720, zNear, zFar);
+    glm::mat4 pro = glm::perspective(glm::radians(fov), (float)VulkanDevice::GetSwapchainExtent().width/(float)VulkanDevice::GetSwapchainExtent().height, zNear, zFar);
     pro[1][1] *= -1;
     return pro;
 }

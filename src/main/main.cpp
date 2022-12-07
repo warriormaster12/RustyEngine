@@ -21,11 +21,12 @@ int main(int argc, char* argv[]) {
 
     camera.AddComponent<Camera>();
     camera.AddComponent<Transform>();
-    camera.GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, 9.0f));
+    camera.GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 1.0f, 0.0f));
 
 
 
     chinesedragon = ModelLoader::LoadFile("samples/models/chinesedragon.gltf");
+    //chinesedragon[0].GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
     suzanne = ModelLoader::LoadFile("samples/models/sponza.gltf");
 
 

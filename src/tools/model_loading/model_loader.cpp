@@ -5,6 +5,7 @@
 #include "components/transform.h"
 
 #include "gtc/type_ptr.hpp"
+#include "gtx/quaternion.hpp"
 
 
 
@@ -37,7 +38,7 @@ std::vector<Entity> ModelLoader::LoadFile(const std::string &file) {
             auto* transform = entity.GetComponent<Transform>();
             glm::vec3 pos = glm::vec3(0.0f);
             glm::vec3 scale = glm::vec3(1.0f);
-            glm::quat rot;
+            glm::mat4 rot;
             glm::mat4 matrix;
             if (node.translation.size() > 0) {
                 pos = glm::make_vec3(node.translation.data());
@@ -47,12 +48,12 @@ std::vector<Entity> ModelLoader::LoadFile(const std::string &file) {
             }
             if (node.rotation.size() > 0) {
                 glm::quat q = glm::make_quat(node.rotation.data());
-                rot = glm::mat4(q);
+                rot = glm::toMat4(q);
             }
             if(node.matrix.size()>0) {
                 matrix = glm::make_mat4x4(node.matrix.data());
             }
-            transform->SetTransformMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::mat4(rot) * glm::scale(glm::mat4(1.0f), scale));
+            transform->SetTransformMatrix(glm::translate(glm::mat4(1.0f), pos) * rot * glm::scale(glm::mat4(1.0f), scale));
             for(auto primitive : model.meshes[node.mesh].primitives) {
                 auto& verticies = entity.GetComponent<Mesh>()->vertices;
                 auto& indicies = entity.GetComponent<Mesh>()->indicies;
