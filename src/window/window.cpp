@@ -39,3 +39,8 @@ void Window::Shutdown() {
     glfwDestroyWindow(static_cast<GLFWwindow*>(p_window));
     glfwTerminate();
 }
+
+
+int Window::GetKEvents(int key){
+    return glfwGetKey(static_cast<GLFWwindow*>(p_window), key);
+}

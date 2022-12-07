@@ -13,6 +13,7 @@ public:
 
     void Start() {
         for(auto& component : component_list) {
+            component->entity = this;
             component->on_ready();
         }
     }

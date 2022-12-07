@@ -15,6 +15,7 @@ public:
     void SetTransformMatrix(const glm::mat4& value);
 
     const glm::vec3& GetPosition() {return position;}
+    const glm::vec3& GetRotation() {return rotation;}
     const glm::mat4& GetTransformMatrix() {return transformMatrix;}
 
 private:

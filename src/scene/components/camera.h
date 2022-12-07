@@ -18,10 +18,6 @@ public:
     glm::mat4 renderMatrix;
 
 
-    float pitch{ 0 }; //up-down rotation
-	float yaw{ 0 }; //left-right rotation
-
-
     float fov = 90.0f;
     float zNear = 0.1f;
 	float zFar = 100.0f;

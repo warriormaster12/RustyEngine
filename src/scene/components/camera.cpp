@@ -21,6 +21,13 @@ void Camera::update(const double &delta){
 
 glm::mat4 Camera::GetRotationMatrix() const
 {
+	float yaw = 0.0f;
+	float pitch = 0.0f;
+	if(entity->GetComponent<Transform>() != nullptr){
+		yaw = entity->GetComponent<Transform>()->GetRotation().x;
+		pitch = entity->GetComponent<Transform>()->GetRotation().y;
+	}
+
 	glm::mat4 yaw_rot = glm::rotate(glm::mat4{ 1 }, yaw, { 0,1,0 });
 	glm::mat4 pitch_rot = glm::rotate(glm::mat4{ yaw_rot }, pitch, { -1,0,0 });
 
