@@ -10,8 +10,8 @@
 
 class RenderPipeline {
 public:
-    virtual void Prepare(Camera* camera = nullptr)=0;
-    virtual void Update(Camera* camera)=0;
+    virtual void Prepare()=0;
+    virtual void Update()=0;
     std::vector<Entity*> entities;
 };
 
@@ -38,9 +38,9 @@ public:
             pipelines.find(typeid(T).name())->second->entities.push_back(entity);
         }
     }
-    static void UpdatePipeline(Camera* camera = nullptr) {
+    static void UpdatePipeline() {
         for (auto pipeline : pipelines){
-            pipeline.second->Update(camera);
+            pipeline.second->Update();
         }
     }
     template<typename T>

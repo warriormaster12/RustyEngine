@@ -32,7 +32,7 @@ glm::mat4 Camera::GetViewMatrix() const
 	glm::mat4 cam_rot = GetRotationMatrix();
 	glm::mat4 view;
 	if(transform != nullptr) {
-		view = glm::translate(glm::mat4{ 1 }, transform->position) * cam_rot;
+		view = glm::translate(glm::mat4{ 1 }, transform->GetPosition()) * cam_rot;
 	}else {
 		view = glm::translate(glm::mat4{ 1 }, glm::vec3(0.0f)) * cam_rot;
 	}

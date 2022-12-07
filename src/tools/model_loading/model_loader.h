@@ -1,4 +1,4 @@
-#pragma  once 
+#pragma  once
 
 #include <iostream>
 
@@ -9,6 +9,6 @@
 
 class ModelLoader{
 public:
-    static void LoadFile(const std::string& file, std::vector<Entity>& outEntities);
+    static std::vector<Entity> LoadFile(const std::string& file);
 
 };

@@ -19,7 +19,8 @@ public:
 
     void Update(const double& deltaT) {
          for(auto& component : component_list) {
-            component->update(deltaT);
+            component->entity = this;
+            component.get()->update(deltaT);
         }
     }
     template<typename T>
@@ -32,9 +33,7 @@ public:
                 else {
                     std::unique_ptr<T> component = std::make_unique<T>();
                     component->type_name = typeid(T).name();
-                    if (component->entity == nullptr) {
-                        component->entity = this;
-                    }
+
                     component_list.push_back(std::move(component));
                     break;
                 }
@@ -43,9 +42,7 @@ public:
         else {
             std::unique_ptr<T> component = std::make_unique<T>();
             component->type_name = typeid(T).name();
-            if (component->entity == nullptr) {
-                component->entity = this;
-            }
+
             component_list.push_back(std::move(component));
         }
     }

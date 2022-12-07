@@ -13,55 +13,50 @@
 
 int main(int argc, char* argv[]) {
     Logger::Init();
-    
+
     std::vector<Entity> chinesedragon;
-    std::vector<Entity> sponza;
-    Entity my_entity;
-    my_entity.name = "dragon";
-    Entity my_entity2;
-    my_entity2.name = "suzanne";
+    std::vector<Entity> suzanne;
+    Entity camera;
+    camera.name = "camera";
 
-    my_entity.AddComponent<Camera>();
-    my_entity.AddComponent<Transform>();
-    my_entity.GetComponent<Transform>()->position = {0.0f, 0.0f, 9.0f};
-
-    my_entity2.AddComponent<Mesh>();
-    my_entity2.AddComponent<Transform>();
-    my_entity2.GetComponent<Transform>()->position = {-1.0f,-0.3f, 0.0f};
-    my_entity2.GetComponent<Transform>()->rotation = {0.0f, 5.0f, 45.0f};
+    camera.AddComponent<Camera>();
+    camera.AddComponent<Transform>();
+    camera.GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, 9.0f));
 
 
-    ModelLoader::LoadFile("samples/models/chinesedragon.gltf", chinesedragon);
-    ModelLoader::LoadFile("samples/models/suzanne.gltf", sponza);
+
+    chinesedragon = ModelLoader::LoadFile("samples/models/chinesedragon.gltf");
+    suzanne = ModelLoader::LoadFile("samples/models/sponza.gltf");
 
 
     VulkanDevice::Init();
     Window::Init();
     VulkanDevice::CreateDevice();
     VulkanDevice::CreateSwapchain(1280, 720);
-    my_entity.Start();
     PipelineManager::AddPipeline<GeometryPipeline>();
     for(auto& entity : chinesedragon) {
         entity.Start();
         PipelineManager::AddEntityToList<GeometryPipeline>(&entity);
     }
-    for(auto& entity : sponza) {
+    for(auto& entity : suzanne) {
         entity.Start();
         PipelineManager::AddEntityToList<GeometryPipeline>(&entity);
     }
-    PipelineManager::GetPipeline<GeometryPipeline>()->Prepare(my_entity.GetComponent<Camera>());
+    camera.Start();
+    PipelineManager::AddEntityToList<GeometryPipeline>(&camera);
+    PipelineManager::GetPipeline<GeometryPipeline>()->Prepare();
 
     while ( Window::Running() ) {
-        VulkanRBE::PrepareFrame();
-        PipelineManager::UpdatePipeline(my_entity.GetComponent<Camera>());
-        VulkanRBE::SubmitFrame();
-        my_entity.Update(VulkanRBE::frameCount);
+        camera.Update(VulkanRBE::frameCount);
         for(auto& entity : chinesedragon) {
             entity.Update(VulkanRBE::frameCount);
         }
-        for(auto& entity : sponza) {
+        for(auto& entity : suzanne) {
             entity.Update(VulkanRBE::frameCount);
         }
+        VulkanRBE::PrepareFrame();
+        PipelineManager::UpdatePipeline();
+        VulkanRBE::SubmitFrame();
     }
     VulkanDevice::Shutdown();
     Window::Shutdown();

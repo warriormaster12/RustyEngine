@@ -4,10 +4,12 @@
 #include "components/mesh.h"
 #include "components/transform.h"
 
+#include "gtc/type_ptr.hpp"
 
 
 
-void ModelLoader::LoadFile(const std::string &file, std::vector<Entity>& outEntities) {
+
+std::vector<Entity> ModelLoader::LoadFile(const std::string &file) {
     tinygltf::TinyGLTF loader;
     std::string err;
     std::string warn;
@@ -25,6 +27,7 @@ void ModelLoader::LoadFile(const std::string &file, std::vector<Entity>& outEnti
     if (!ret) {
         ENGINE_ERROR("Failed to parse glTF");
     }
+    std::vector<Entity> outEntities;
     for(auto node : model.nodes) {
         Entity entity;
         if(node.mesh != -1) {
@@ -32,16 +35,24 @@ void ModelLoader::LoadFile(const std::string &file, std::vector<Entity>& outEnti
             entity.AddComponent<Transform>();
             entity.AddComponent<Mesh>();
             auto* transform = entity.GetComponent<Transform>();
+            glm::vec3 pos = glm::vec3(0.0f);
+            glm::vec3 scale = glm::vec3(1.0f);
+            glm::quat rot;
+            glm::mat4 matrix;
             if (node.translation.size() > 0) {
-                transform->position = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
+                pos = glm::make_vec3(node.translation.data());
             }
             if (node.scale.size() > 0) {
-                transform->scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
+                scale = glm::make_vec3(node.scale.data());
             }
-            if (node.scale.size() > 0) {
-                transform->rotation = glm::vec3(node.rotation[0], node.rotation[1], node.rotation[2]);
+            if (node.rotation.size() > 0) {
+                glm::quat q = glm::make_quat(node.rotation.data());
+                rot = glm::mat4(q);
             }
-
+            if(node.matrix.size()>0) {
+                matrix = glm::make_mat4x4(node.matrix.data());
+            }
+            transform->SetTransformMatrix(glm::translate(glm::mat4(1.0f), pos) * glm::mat4(rot) * glm::scale(glm::mat4(1.0f), scale));
             for(auto primitive : model.meshes[node.mesh].primitives) {
                 auto& verticies = entity.GetComponent<Mesh>()->vertices;
                 auto& indicies = entity.GetComponent<Mesh>()->indicies;
@@ -77,39 +88,37 @@ void ModelLoader::LoadFile(const std::string &file, std::vector<Entity>& outEnti
 
                     switch (accessor.componentType) {
                         case TINYGLTF_PARAMETER_TYPE_UNSIGNED_INT: {
-                            uint32_t *buf = new uint32_t[accessor.count];
+                            uint32_t buf[accessor.count];
                             memcpy(buf, &buffer.data[accessor.byteOffset + bufferView.byteOffset], accessor.count * sizeof(uint32_t));
                             for (size_t index = 0; index < accessor.count; index++) {
                                 indicies[index] = buf[index];
                             }
-                            delete[] buf;
                             break;
                         }
                         case TINYGLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
-                            uint16_t *buf = new uint16_t[accessor.count];
+                            uint16_t buf[accessor.count];
                             memcpy(buf, &buffer.data[accessor.byteOffset + bufferView.byteOffset], accessor.count * sizeof(uint16_t));
                             for (size_t index = 0; index < accessor.count; index++) {
                                 indicies[index] = buf[index];
                             }
-                            delete[] buf;
                             break;
                         }
                         case TINYGLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
-                            uint8_t *buf = new uint8_t[accessor.count];
+                            uint8_t buf[accessor.count];
                             memcpy(buf, &buffer.data[accessor.byteOffset + bufferView.byteOffset], accessor.count * sizeof(uint8_t));
                             for (size_t index = 0; index < accessor.count; index++) {
                                 indicies[index] = buf[index];
                             }
-                            delete[] buf;
                             break;
                         }
                         default:
                             std::cerr << "Index component type " << accessor.componentType << " not supported!" << std::endl;
-                            return;
                     }
                 }
             }
             outEntities.push_back(entity);
+
         }
     }
+    return outEntities;
 }

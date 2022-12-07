@@ -1,4 +1,5 @@
 #include "transform.h"
+#include "gtx/euler_angles.hpp"
 
 void Transform::on_ready() {
 
@@ -6,7 +7,40 @@ void Transform::on_ready() {
 
 
 void Transform::update(const double &delta){
-    
+
+}
+
+
+void Transform::SetPosition(const glm::vec3& value){
+    position = value;
+    transformMatrix = GetModelMatrix();
+}
+
+void Transform::SetRotation(const glm::vec3& value){
+    rotation = value;
+    transformMatrix = GetModelMatrix();
+}
+
+void Transform::SetScale(const glm::vec3& value){
+    scale = value;
+    transformMatrix = GetModelMatrix();
+}
+
+void Transform::SetTransformMatrix(const glm::mat4& value){
+    position = value[3];
+    scale.x = glm::length(glm::vec3(value[0]));
+    scale.y = glm::length(glm::vec3(value[1]));
+    scale.z = glm::length(glm::vec3(value[2]));
+
+    auto T1 = glm::atan2(value[2][1], value[2][2]);
+    auto C2 = glm::sqrt(value[0][0]*value[0][0] + value[1][0]*value[1][0]);
+    auto T2 = glm::atan2(-value[2][0], C2);
+    auto S1 = glm::sin(T1);
+    auto C1 = glm::cos(T1);
+    auto T3 = glm::atan2(S1*value[0][2] - C1*value[0][1], C1*value[1][1] - S1*value[1][2  ]);
+    rotation = glm::vec3(-T1,-T2,-T3);
+
+    transformMatrix = GetTransformMatrix();
 }
 
 glm::mat4 Transform::GetModelMatrix() {
