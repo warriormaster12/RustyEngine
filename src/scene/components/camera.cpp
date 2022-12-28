@@ -51,9 +51,10 @@ glm::mat4 Camera::GetViewMatrix() const
 	return view;
 }
 
-glm::mat4 Camera::GetProjectionMatrix() const
+glm::mat4 Camera::GetProjectionMatrix()
 {
-    glm::mat4 pro = glm::perspective(glm::radians(fov), (float)VulkanDevice::GetSwapchainExtent().width/(float)VulkanDevice::GetSwapchainExtent().height, zNear, zFar);
+	aspect = (float)VulkanDevice::GetSwapchainExtent().width/(float)VulkanDevice::GetSwapchainExtent().height;
+    glm::mat4 pro = glm::perspective(glm::radians(fov), aspect, zNear, zFar);
     pro[1][1] *= -1;
     return pro;
 }

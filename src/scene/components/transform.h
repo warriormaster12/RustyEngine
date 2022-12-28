@@ -16,6 +16,7 @@ public:
 
     const glm::vec3& GetPosition() {return position;}
     const glm::vec3& GetRotation() {return rotation;}
+    const glm::vec3& GetScale() {return scale;}
     const glm::mat4& GetTransformMatrix() {return transformMatrix;}
 
 private:

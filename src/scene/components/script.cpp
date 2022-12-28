@@ -58,16 +58,22 @@ void Script::update(const double &delta){
     if (entity->GetComponent<Camera>() != nullptr){
         glm::mat4 cam_rot = entity->GetComponent<Camera>()->GetRotationMatrix();
 
-        glm::vec3 forward = { 0,0,speed };
-	    glm::vec3 right = { speed,0,0 };
-        glm::vec3 up = { 0,speed,0 };
+        glm::vec3 forward = { 0,0,1.0f };
+	    glm::vec3 right = { 1.0f,0,0 };
+        glm::vec3 up = { 0,1.0f,0 };
 
         forward = cam_rot * glm::vec4(forward, 0.f);
         right = cam_rot * glm::vec4(right, 0.f);
 
+        entity->GetComponent<Camera>()->forward = forward;
+        entity->GetComponent<Camera>()->right = right;
+        entity->GetComponent<Camera>()->up = up;
+
+        
+
         velocity = inputAxis.z * forward + inputAxis.x * right + inputAxis.y * up;
 
-	    velocity *= delta;
+	    velocity *= speed * delta;
 
         position += velocity;
         if (entity->GetComponent<Transform>() != nullptr){
