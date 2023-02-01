@@ -20,8 +20,8 @@ void Mesh::on_ready() {
 
 void Mesh::update(const double &delta){
     if(entity != nullptr) {
-        if (entity->GetComponent<Transform>() != nullptr) {
-            modelMatrix = entity->GetComponent<Transform>()->GetTransformMatrix();
+        if (Transform* trans = entity->GetComponent<Transform>(); trans != nullptr) {
+            modelMatrix = trans->GetTransformMatrix();
         }
     }
     //modelBuffer.UploadBufferData(&modelMatrix);

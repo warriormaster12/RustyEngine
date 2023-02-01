@@ -6,9 +6,7 @@
 
 Frustum Frustum::createFrustumFromCamera(Entity& camEntity) {
     Frustum frustum;
-    if(camEntity.GetComponent<Camera>() != nullptr && camEntity.GetComponent<Transform>() != nullptr){
-        auto* camera = camEntity.GetComponent<Camera>();
-        auto* transform = camEntity.GetComponent<Transform>();
+    if(auto [camera, transform] = std::tuple{camEntity.GetComponent<Camera>(), camEntity.GetComponent<Transform>()}; camera != nullptr && transform != nullptr){
         const float halfVSide = camera->zFar * tanf(glm::radians(camera->fov) * .5f);
         const float halfHSide = halfVSide * camera->aspect;
         const glm::vec3 frontMultFar = camera->zFar * camera->forward;
@@ -75,7 +73,7 @@ AABB AABB::generateAABB(Entity& entity)
     return AABB(glm::vec3(0.0f), glm::vec3(0.0f));
 }
 
-bool AABB::isOnFrustum(const Frustum& camFrustum, Entity& entity) const 
+bool AABB::isOnFrustum(const Frustum& camFrustum, Entity& entity) const
 {
     if(entity.GetComponent<Transform>() != nullptr && entity.GetComponent<Mesh>() != nullptr){
         auto* transform = entity.GetComponent<Transform>();
